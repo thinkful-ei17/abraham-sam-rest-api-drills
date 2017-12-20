@@ -43,7 +43,7 @@ app.post('/shopping-list', jsonParser, (req, res) => {
   for (let i=0; i<requiredFields.length; i++) {
     const field = requiredFields[i];
     if (!(field in req.body)) {
-      const message = `Missing \`${field}\` in request body`
+      const message = `Missing \`${field}\` in request body`;
       console.error(message);
       return res.status(400).send(message);
     }
@@ -51,6 +51,12 @@ app.post('/shopping-list', jsonParser, (req, res) => {
 
   const item = ShoppingList.create(req.body.name, req.body.budget);
   res.status(201).json(item);
+});
+
+app.delete('/shopping-list/:id', (req, res) => {
+  ShoppingList.delete(req.params.id);
+  console.log(`Deleted shopping list item \`${req.params.id}\``);
+  res.status(204).end();
 });
 
 app.get('/recipes', (req, res) => {
@@ -68,9 +74,14 @@ app.post('/recipes', jsonParser, (req, res)=>{
     }
   }
 
-    const {name, ingredients} = req.body;
-    const item = Recipes.create(name, ingredients);
-    res.status(201).json(item);
+  const {name, ingredients} = req.body;
+  const item = Recipes.create(name, ingredients);
+  res.status(201).json(item);
+});
+
+app.delete('/recipes/:id', (req, res) => {
+  Recipes.delete(req.params.id);
+  res.status(204).end();
 });
 
 app.listen(process.env.PORT || 8080, () => {
